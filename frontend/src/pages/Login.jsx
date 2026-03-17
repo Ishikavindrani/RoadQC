@@ -21,6 +21,7 @@ const Login = () => {
             if (user.role === 'admin') navigate('/dashboard');
             else navigate('/visit');
         } catch (err) {
+            console.error('Login Error:', err);
             setError(err.response?.data?.message || 'Login failed. Please check credentials.');
         } finally {
             setLoading(false);

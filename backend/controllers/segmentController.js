@@ -12,6 +12,7 @@ exports.getSegments = async (req, res) => {
 
     try {
         const segments = await RoadSegment.find(filter);
+        console.log(`GET /segments found ${segments.length} items`);
         res.json(segments);
     } catch (error) {
         res.status(500).json({ message: error.message });

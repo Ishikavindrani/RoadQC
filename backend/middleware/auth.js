@@ -8,6 +8,9 @@ const protect = async (req, res, next) => {
             token = req.headers.authorization.split(' ')[1];
             const decoded = jwt.verify(token, process.env.JWT_SECRET || 'supersecretkey123');
             req.user = await User.findById(decoded.id).select('-password');
+            if (!req.user) {
+                return res.status(401).json({ message: 'User no longer exists' });
+            }
             next();
         } catch (error) {
             console.error(error);
@@ -22,8 +25,8 @@ const protect = async (req, res, next) => {
 
 const authorize = (...roles) => {
     return (req, res, next) => {
-        if (!roles.includes(req.user.role)) {
-            return res.status(403).json({ message: `User role ${req.user.role} is not authorized to access this route` });
+        if (!req.user || !roles.includes(req.user.role)) {
+            return res.status(403).json({ message: `Access denied for role: ${req.user?.role || 'unknown'}` });
         }
         next();
     };

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🛣️ Road QC - Smart Infrastructure Monitoring & Audit
 
 Road QC is a high-integrity field inspection and fraud-detection platform designed for road construction quality assurance. It uses geographic sampling, geo-fencing, and real-time trace analysis to prevent "ghost inspections" and ensure thorough audits of physical infrastructure assets.
@@ -65,3 +66,6 @@ Once seeded, the database will contain **3 Pre-registered Road Segments**:
 - `/backend`: Node.js API with Mongoose models, auth middleware, and fraud-detection controllers.
 - `/frontend`: React SPA using Vite, premium glassmorphism styles, and Axios interceptors.
 - `docker-compose.yml`: Orchestration for the entire environment.
+=======
+# RoadQC
+>>>>>>> 92abf74a588bc19f801924149d9f74d55e53f123

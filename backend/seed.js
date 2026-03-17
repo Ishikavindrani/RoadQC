@@ -7,14 +7,16 @@ dotenv.config();
 
 const seed = async () => {
     try {
+        console.log('Connecting to MongoDB...');
         await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/roadqc');
 
         // Clear existing data
+        console.log('Clearing existing data...');
         await User.deleteMany();
         await RoadSegment.deleteMany();
 
         // 1. Create Default Profiles (Admins & Operators)
-        await User.create([
+        const users = [
             {
                 name: 'Super Admin',
                 email: 'admin@roadqc.gov.in',
@@ -33,10 +35,17 @@ const seed = async () => {
                 password: 'password123',
                 role: 'operator'
             }
-        ]);
+        ];
+
+        console.log('Seeding Users...');
+        for (const u of users) {
+            const newUser = new User(u);
+            await newUser.save();
+            console.log(`- Created ${u.role}: ${u.email}`);
+        }
 
         // 2. Create Default Road Segments
-        await RoadSegment.create([
+        const segments = [
             {
                 name: 'Delhi-Mumbai Expressway (Sec 1)',
                 code: 'DME-01',
@@ -67,11 +76,12 @@ const seed = async () => {
                 requiredCheckpoints: 15,
                 status: 'completed'
             }
-        ]);
+        ];
+
+        console.log('Seeding Road Segments...');
+        await RoadSegment.insertMany(segments);
 
         console.log('--- Seeding Complete ---');
-        console.log('3 Users Created (1 Admin, 2 Operators)');
-        console.log('3 Road Segments Created');
         process.exit();
     } catch (error) {
         console.error('Seeding failed:', error);
