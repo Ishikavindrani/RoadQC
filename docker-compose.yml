@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: roadqc-db
+    ports:
+      - "27017:27017"
+    volumes:
+      - roadqc-data:/data/db
+    networks:
+      - roadqc-network
+
+  backend:
+    build: ./backend
+    container_name: roadqc-api
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/roadqc
+      - JWT_SECRET=supersecretkey123
+      - PORT=5000
+    depends_on:
+      - mongodb
+    networks:
+      - roadqc-network
+
+  frontend:
+    build: ./frontend
+    container_name: roadqc-ui
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - roadqc-network
+
+networks:
+  roadqc-network:
+    driver: bridge
+
+volumes:
+  roadqc-data:
